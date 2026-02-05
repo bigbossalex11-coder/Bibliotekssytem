@@ -5,7 +5,7 @@ VisualStudioVersion = 17.14.36811.4 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bibliotekssystem", "Bibliotekssytem\Bibliotekssystem.csproj", "{0A62055A-4605-4DD9-9DB8-8BD4C79BBB3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiblioteksystemTests", "BiblioteksystemTests\BiblioteksystemTests.csproj", "{4EC84F7D-DA29-445B-BDDC-7D9D473461F7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BibliotekssystemTests", "BiblioteksystemTests\BiblioteksystemTests.csproj", "{4EC84F7D-DA29-445B-BDDC-7D9D473461F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

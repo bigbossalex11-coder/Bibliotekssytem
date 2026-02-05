@@ -25,7 +25,7 @@ namespace Bibliotekssytem
         }
         public string GetInfo()
         {
-            return "";
+            return $"{Title} by {Author} written in {PublishedYear} is {IsAvailable}";
         }
     }
 }
