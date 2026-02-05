@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Bibliotekssytem
 {
-    internal class MemberRegistry
+    public class MemberRegistry
     {
     }
 }
