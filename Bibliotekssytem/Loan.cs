@@ -15,13 +15,18 @@ namespace Bibliotekssytem
         public bool IsReturned { get; set; }
         public DateTime DueDate { get; set; }
 
-    public Loan(Book book, Member member)
+        public Loan(Book book, Member member)
         {
             Book = book;
             Member = member;
             LoanDate = DateTime.Today;
             IsReturned = false;
             DueDate = LoanDate.AddDays(14);
+        }
+
+        public void ReturnBook()
+        {
+            IsReturned = true;
         }
     }
 }

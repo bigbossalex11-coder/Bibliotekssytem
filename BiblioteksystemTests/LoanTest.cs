@@ -39,5 +39,16 @@ namespace BiblioteksystemTests
 
             Assert.Equal(DateTime.Today.AddDays(14), loan.DueDate);
         }
+        [Fact]
+        public void Loan_ReturnBook_Should_Set_Is_Returned_True()
+        {
+            var book = new Book("123-321", "Hobbit", "Tolkien", 1937);
+            var member = new Member("Johan", "M001");
+            var loan = new Loan(book, member);
+
+            loan.ReturnBook();
+
+            Assert.True(loan.IsReturned);
+        }
     }
 }
