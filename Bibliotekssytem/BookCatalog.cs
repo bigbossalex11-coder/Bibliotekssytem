@@ -22,6 +22,19 @@ namespace Bibliotekssytem
         {
             Books.Remove(book);
         }
-    }
 
+        public List<Book> SearchByTitle(string searchTerm)
+        {
+            var result = new List<Book>();
+
+            foreach (var book in Books) {
+                if (book.Title.ToLower().Contains(searchTerm.ToLower()))
+                {
+                    result.Add(book);
+                }
+                
+            }
+            return result;
+        }
+    }
 }
