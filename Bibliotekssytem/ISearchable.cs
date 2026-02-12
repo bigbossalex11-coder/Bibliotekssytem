@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Bibliotekssytem
 {
-    public interface ISearchable
+    public interface ISearchable<T>
     {
-    }
+        List<T> Search(string searchTerm);
+    }   
 }

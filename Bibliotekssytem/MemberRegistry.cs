@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Bibliotekssytem
 {
-    public class MemberRegistry
+    public class MemberRegistry : ISearchable<Member>
     {
         public List<Member> Members {  get; set; }
         
@@ -30,6 +30,10 @@ namespace Bibliotekssytem
                 result.Add(member);
             }
             return result;
+        }
+        public List<Member> Search(string searchTerm)
+        {
+            return SearchByName(searchTerm);
         }
     }
     

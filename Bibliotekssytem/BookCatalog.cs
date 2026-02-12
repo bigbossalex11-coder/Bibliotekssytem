@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Bibliotekssytem
 {
-    public class BookCatalog
+    public class BookCatalog : ISearchable<Book>
     {
         public List<Book> Books { get; set; }
 
@@ -27,14 +27,19 @@ namespace Bibliotekssytem
         {
             var result = new List<Book>();
 
-            foreach (var book in Books) {
+            foreach (var book in Books)
+            {
                 if (book.Title.ToLower().Contains(searchTerm.ToLower()))
                 {
                     result.Add(book);
                 }
-                
+
             }
             return result;
+        }
+        public List<Book> Search(string searchTerm)
+        {
+            return SearchByTitle(searchTerm);
         }
     }
 }
