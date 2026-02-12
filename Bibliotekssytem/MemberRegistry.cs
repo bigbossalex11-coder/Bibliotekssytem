@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +21,16 @@ namespace Bibliotekssytem
         public void RemoveMember(Member member) 
             { Members.Remove(member); }
 
+        public List<Member> SearchByName(string searchTerm)
+        {
+            var result = new List<Member>();
+            foreach (var member in Members)
+            {
+                if (member.Name.ToLower().Contains(searchTerm.ToLower())) 
+                result.Add(member);
+            }
+            return result;
+        }
     }
     
 }

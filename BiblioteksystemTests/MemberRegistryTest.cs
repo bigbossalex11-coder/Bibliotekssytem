@@ -32,5 +32,30 @@ namespace BiblioteksystemTests
 
             Assert.Empty(memberRegistry.Members);
         }
+        [Theory]
+        [InlineData("Alice",true)]
+        [InlineData("alice",true)]
+        [InlineData("Alex",false)]
+        public void Member_Matches_Search_By_Name(string searchTerm, bool shouldFind)
+        {
+            var memberRegistry = new MemberRegistry();
+
+            var member1 = new Member("Alice", "1001", true);
+            var member2 = new Member("Bob", "1002", true);
+            var member3 = new Member("Alice Berg", "1003", true);
+            var member4 = new Member("Charlie Patron", "1004", true);
+
+            memberRegistry.AddMember(member1);
+            memberRegistry.AddMember(member2);
+            memberRegistry.AddMember(member3);
+            memberRegistry.AddMember(member4);
+
+            var result = memberRegistry.SearchByName(searchTerm);
+
+            if (shouldFind)
+                Assert.NotEmpty(result);
+            else
+                Assert.Empty(result);
+        }
     }
 }
