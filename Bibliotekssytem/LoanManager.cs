@@ -9,7 +9,7 @@ namespace Bibliotekssytem
 {
     public class LoanManager
     {
-        public List<Loan> Loans { get; set; }
+        public List<Loan> Loans { get; private set; }
 
         public LoanManager()
         {

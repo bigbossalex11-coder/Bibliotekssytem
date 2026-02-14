@@ -8,7 +8,7 @@ namespace Bibliotekssytem
 {
     public class BookCatalog : ISearchable<Book>
     {
-        public List<Book> Books { get; set; }
+        public List<Book> Books { get; private set; }
 
         public BookCatalog()
         {

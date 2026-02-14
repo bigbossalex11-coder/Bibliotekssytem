@@ -10,8 +10,8 @@ namespace Bibliotekssytem
     {
         public string  Name { get; set; }
         public string  MembershipID { get; private set; }
-        public bool CanBorrow { get; set; }
-        public List<Book> BorrowedBooks { get; set; }
+        public bool CanBorrow { get; private set; }
+        public List<Book> BorrowedBooks { get; private set; }
 
         public Member(string name, string membershipID, bool canBorrow = true)
         {

@@ -9,7 +9,7 @@ namespace Bibliotekssytem
 {
     public class MemberRegistry : ISearchable<Member>
     {
-        public List<Member> Members {  get; set; }
+        public List<Member> Members {  get; private set; }
         
         public MemberRegistry()
         {

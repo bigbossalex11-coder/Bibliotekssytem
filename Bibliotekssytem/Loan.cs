@@ -9,11 +9,11 @@ namespace Bibliotekssytem
 {
     public class Loan
     {
-        public Book Book { get; set; }
-        public Member Member { get; set; }
-        public DateTime LoanDate { get; set; }
-        public bool IsReturned { get; set; }
-        public DateTime DueDate { get; set; }
+        public Book Book { get; private set; }
+        public Member Member { get; private set; }
+        public DateTime LoanDate { get; private set; }
+        public bool IsReturned { get; private set; }
+        public DateTime DueDate { get; private set; }
 
         public Loan(Book book, Member member)
         {
