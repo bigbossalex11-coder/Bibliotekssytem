@@ -41,5 +41,15 @@ namespace Bibliotekssytem
         {
             return SearchByTitle(searchTerm);
         }
+        public void SortByTitle()
+        {
+           Books.Sort((a, b) => string.Compare(a.Title, b.Title)); 
+                
+        }
+        public void SortByYear()
+        {
+            Books.Sort((a, b) => (a.PublishedYear.CompareTo(b.PublishedYear)));
+        }
+
     }
 }
