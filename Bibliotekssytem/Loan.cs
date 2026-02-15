@@ -28,5 +28,14 @@ namespace Bibliotekssytem
         {
             IsReturned = true;
         }
+        public decimal CalculateLateFee(DateTime currentDate)
+        {
+            var dayslate = (currentDate - DueDate).Days;
+            if (dayslate > 0)
+            {
+                return dayslate * 10;
+            }
+            return 0;
+        }
     }
 }
