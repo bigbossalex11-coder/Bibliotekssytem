@@ -17,8 +17,12 @@ namespace Bibliotekssytem
         }
         public void BorrowBooks(Book book, Member member)
         {
-            var loan = new Loan(book, member);
-            Loans.Add(loan);
+            if (book.IsAvailable && member.CanBorrow)
+            {
+                var loan = new Loan(book, member);
+                Loans.Add(loan);
+                book.IsAvailable = false;
+            }
         }
         public void ReturnBooks(Book book)
         {
@@ -27,6 +31,7 @@ namespace Bibliotekssytem
                 if (loan.Book == book)
                 {
                     loan.ReturnBook();
+                    book.IsAvailable = true;
                 }
             }
         }
