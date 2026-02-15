@@ -7,7 +7,10 @@ using System.Threading.Tasks;
 
 namespace Bibliotekssytem
 {
-    public class LoanManager
+    /// <summary>
+    /// Manages book loans, including borrowing and returning books.
+    /// </summary>
+    public class LoanManager 
     {
         public List<Loan> Loans { get; private set; }
 
@@ -17,13 +20,15 @@ namespace Bibliotekssytem
         }
         public void BorrowBooks(Book book, Member member)
         {
+            //only available books can be borrowed
             if (!book.IsAvailable) 
                 {
-                throw new InvalidOperationException("Book is not available");
+                throw new InvalidOperationException("Book is not available"); 
                 }
+            //Member must have borrowing priviliges
             if (!member.CanBorrow)
             {
-                throw new InvalidOperationException("You are not allowed to borrow");
+                throw new InvalidOperationException("You are not allowed to borrow"); 
             }
             var loan = new Loan(book, member);
             Loans.Add(loan);

@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Bibliotekssytem
 {
+    /// <summary>
+    /// Represents a book loan with due date and late fee calculation.
+    /// </summary>
     public class Loan
     {
         public Book Book { get; private set; }
@@ -30,10 +33,11 @@ namespace Bibliotekssytem
         }
         public decimal CalculateLateFee(DateTime currentDate)
         {
+            //fee is 10 kr per day past due date
             var dayslate = (currentDate - DueDate).Days;
             if (dayslate > 0)
             {
-                return dayslate * 10;
+                return dayslate * 10; 
             }
             return 0;
         }
