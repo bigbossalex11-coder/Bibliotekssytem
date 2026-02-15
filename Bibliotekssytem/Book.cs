@@ -25,7 +25,7 @@ namespace Bibliotekssytem
         }
         public string GetInfo()
         {
-            return $"{Title} by {Author} written in {PublishedYear} is {IsAvailable}";
+            return $"{Title} by {Author} written in {PublishedYear} - {(IsAvailable ? "Tillgänglig" : "Utlånad")}";
         }
     }
 }
