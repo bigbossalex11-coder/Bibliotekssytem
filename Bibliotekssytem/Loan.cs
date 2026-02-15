@@ -17,6 +17,8 @@ namespace Bibliotekssytem
         public DateTime LoanDate { get; private set; }
         public bool IsReturned { get; private set; }
         public DateTime DueDate { get; private set; }
+        private const int LoanPeriodDays = 14;
+        private const decimal LateFeePerDay = 10m;
 
         public Loan(Book book, Member member)
         {
@@ -24,7 +26,7 @@ namespace Bibliotekssytem
             Member = member;
             LoanDate = DateTime.Today;
             IsReturned = false;
-            DueDate = LoanDate.AddDays(14);
+            DueDate = LoanDate.AddDays(LoanPeriodDays);
         }
 
         public void ReturnBook()
@@ -37,7 +39,7 @@ namespace Bibliotekssytem
             var dayslate = (currentDate - DueDate).Days;
             if (dayslate > 0)
             {
-                return dayslate * 10; 
+                return dayslate * LateFeePerDay; 
             }
             return 0;
         }
