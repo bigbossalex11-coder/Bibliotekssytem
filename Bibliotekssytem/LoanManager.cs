@@ -37,6 +37,10 @@ namespace Bibliotekssytem
         
         public void ReturnBooks(Book book)
         {
+            if (!Loans.Any(l => l.Book == book))
+            {
+                throw new InvalidOperationException("Book is not borrowed");
+            }
             foreach (var loan in Loans)
             {
                 if (loan.Book == book)
