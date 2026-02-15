@@ -35,26 +35,13 @@ namespace BiblioteksystemTests
             Assert.True(loanManager.Loans[0].IsReturned);
         }
         [Fact]
-        public void BorrowBook_Does_Not_AddLoan_When_Not_Available()
-        {
-            var book = new Book("123-321", "Hobbit", "Tolkien", 1937) { IsAvailable = false };
-            var member = new Member("Charlie", "0001", true);
-            var loanManager = new LoanManager();
-            
-            loanManager.BorrowBooks(book, member);
-
-            Assert.Empty(loanManager.Loans);
-        }
-        [Fact]
         public void BorrowBooks_DoesNotAddLoan_WhenCanBorrowIsFalse()
         {
             var member = new Member("name", "membershipID", false); 
             var book = new Book("ISBN", "title", "author", 2022);
             var loanManager = new LoanManager();
-
-            loanManager.BorrowBooks(book,member);
-
-            Assert.Empty(loanManager.Loans);
+            
+            Assert.Throws<InvalidOperationException>(() => loanManager.BorrowBooks(book, member));
         }
         [Fact]
         public void BorrowBooks_Set_Book_As_Not_Available_WhenBookIsBorrowed()
@@ -78,6 +65,16 @@ namespace BiblioteksystemTests
             loanManager.ReturnBooks(book);
 
             Assert.True(book.IsAvailable);
+        }
+        [Fact]
+        public void BorrowBooks_Throws_Exception_When_Book_is_Unavailable()
+        {
+            var loanManager = new LoanManager();
+            var book = new Book("123-321", "Hobbit", "Tolkien", 1937, false);
+            var member = new Member("Charlie", "0001", true);
+
+
+            Assert.Throws<InvalidOperationException>(() => loanManager.BorrowBooks(book, member));
         }
         
 

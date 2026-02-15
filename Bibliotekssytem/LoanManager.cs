@@ -17,13 +17,19 @@ namespace Bibliotekssytem
         }
         public void BorrowBooks(Book book, Member member)
         {
-            if (book.IsAvailable && member.CanBorrow)
+            if (!book.IsAvailable) 
+                {
+                throw new InvalidOperationException("Book is not available");
+                }
+            if (!member.CanBorrow)
             {
-                var loan = new Loan(book, member);
-                Loans.Add(loan);
-                book.IsAvailable = false;
+                throw new InvalidOperationException("You are not allowed to borrow");
             }
+            var loan = new Loan(book, member);
+            Loans.Add(loan);
+            book.IsAvailable = false;
         }
+        
         public void ReturnBooks(Book book)
         {
             foreach (var loan in Loans)
@@ -32,6 +38,7 @@ namespace Bibliotekssytem
                 {
                     loan.ReturnBook();
                     book.IsAvailable = true;
+
                 }
             }
         }
