@@ -74,22 +74,28 @@ namespace Bibliotekssytem
                                 Console.WriteLine(book.GetInfo());
                             }
                         }
-                        Console.Write("Ange boktitle: ");
-                        
-                        var bokTitle = Console.ReadLine();
-                        var searchResult = catalog.SearchByTitle(bokTitle);
-                        var selectedBook = searchResult.First();
-
-                        foreach (var member in registry.Members)
+                        try
                         {
-                        Console.WriteLine($"ID: {member.MembershipID} | Namn: {member.Name}");
-                        }
-                        Console.WriteLine("Ange medlems-ID: ");
-                        var memberID = Console.ReadLine();
+                            Console.Write("Ange boktitle: ");
+                            var bookTitle = Console.ReadLine();
+                            var searchResult = catalog.SearchByTitle(bookTitle);
+                            var selectedBook = searchResult.First();
 
-                        var selectedMember = registry.Members.First(m => m.MembershipID == memberID);
-                        manager.BorrowBooks(selectedBook, selectedMember);
-                        Console.WriteLine("Boken har lånats!");
+                            foreach (var member in registry.Members)
+                            {
+                                Console.WriteLine($"ID: {member.MembershipID} | Namn: {member.Name}");
+                            }
+                            Console.WriteLine("Ange medlems-ID: ");
+                            var memberID = Console.ReadLine();
+
+                            var selectedMember = registry.Members.First(m => m.MembershipID == memberID);
+                            manager.BorrowBooks(selectedBook, selectedMember);
+                            Console.WriteLine("Boken har lånats!");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Fel: {ex.Message}");
+                        }
                         break;
                     case "4":
                         foreach (var book in catalog.Books)
@@ -100,13 +106,20 @@ namespace Bibliotekssytem
                             }
                         }
 
-                        Console.Write("Ange boktitle");
-                        var returTitle = Console.ReadLine();
-                        var returnResult = catalog.SearchByTitle(returTitle);
-                        var returnBook = returnResult.First();
+                        try
+                        {
+                            Console.Write("Ange boktitle: ");
+                            var returTitle = Console.ReadLine();
+                            var returnResult = catalog.SearchByTitle(returTitle);
+                            var returnBook = returnResult.First();
 
-                        manager.ReturnBooks(returnBook);
-                        Console.WriteLine("Boken har returnerats!");
+                            manager.ReturnBooks(returnBook);
+                            Console.WriteLine("Boken har returnerats!");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Fel: {ex.Message}");
+                        }
                         break;
                         
                         
