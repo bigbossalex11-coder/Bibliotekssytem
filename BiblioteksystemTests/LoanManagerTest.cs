@@ -93,8 +93,22 @@ namespace BiblioteksystemTests
         {
             var loanManager = new LoanManager();
             var book = new Book("123-321", "Hobbit", "Tolkien", 1937);
-            
+
             Assert.Throws<InvalidOperationException>(() => loanManager.ReturnBooks(book));
+        }
+        [Fact]
+        public void BorrowBooks_Throws_Exception_When_Max_Number_Of_Loans_Exceeded()
+        {
+            var loanManager = new LoanManager();
+            var book1 = new Book("123-321", "Hobbit", "Tolkien", 1937);
+            var book2 = new Book("123-322", "Lord of the Rings", "Tolkien", 1954);
+            var book3 = new Book("123-323", "The Silmarillion", "Tolkien", 1977);
+            var member = new Member("Charlie", "0001", true);
+            loanManager.BorrowBooks(book1, member);
+            loanManager.BorrowBooks(book2, member);
+            loanManager.BorrowBooks(book3, member);
+            Assert.Throws<InvalidOperationException>(() => loanManager.BorrowBooks(new Book("123-324", "Unfinished Tales", "Tolkien", 1980), member));
         }
     }
 }
+

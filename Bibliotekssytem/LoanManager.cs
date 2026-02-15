@@ -12,6 +12,7 @@ namespace Bibliotekssytem
     /// </summary>
     public class LoanManager 
     {
+        private const int MaxLoansPerMember = 3;
         public List<Loan> Loans { get; private set; }
 
         public LoanManager()
@@ -20,6 +21,13 @@ namespace Bibliotekssytem
         }
         public void BorrowBooks(Book book, Member member)
         {
+            //A member can borrow a maximum of 3 books at a time
+            if (Loans.Count(l => l.Member == member && !l.IsReturned) >= MaxLoansPerMember)
+            {
+                throw new InvalidOperationException("Member has reached max number of loans");
+            }
+            
+            
             //only available books can be borrowed
             if (!book.IsAvailable) 
                 {
