@@ -113,7 +113,7 @@ namespace Bibliotekssytem
                     case "5":
                         foreach(var member in registry.Members)
                         {
-                            Console.WriteLine($"ID: {member.MembershipID} | Namn: {member.Name} | Kan låna: {member.CanBorrow}");
+                            Console.WriteLine($"ID: {member.MembershipID} | Namn: {member.Name} | Kan låna: {(member.CanBorrow ? "Ja" : "Nej")}");
                         }
                         break;
 
