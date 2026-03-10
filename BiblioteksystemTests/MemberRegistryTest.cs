@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
-using Bibliotekssytem;
+using LibrarySystem.Core;
 using Xunit;
 
 namespace BiblioteksystemTests
