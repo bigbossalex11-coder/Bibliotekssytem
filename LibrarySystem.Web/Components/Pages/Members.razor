@@ -1,0 +1,43 @@
+﻿@page "/members"
+@using LibrarySystem.Core
+@using LibrarySystem.Data.Interfaces
+@inject IMemberRepository MemberRepo
+@rendermode InteractiveServer
+
+<h1>Medlemmar</h1>
+<input @bind="newName" placeholder="Namn" />
+<input @bind="newMembershipId" placeholder="Medlems ID" />
+<button @onclick="AddMember">Lägg till</button>
+
+@foreach (var member in members)
+{
+	<p>@member.Name - @member.MembershipID <button @onclick="() => DeleteMember(member)">Ta bort</button></p>
+}
+
+
+@code {
+	private List<Member> members = new();
+
+	protected override async Task OnInitializedAsync()
+	{
+		members = await MemberRepo.GetAllAsync();
+	}
+
+	private string newName = "";
+	private string newMembershipId = "";
+
+	private async Task AddMember()
+	{
+		var newMember = new Member(newName, newMembershipId);
+		await MemberRepo.AddAsync(newMember);
+		members.Add(newMember);
+
+		newName = "";
+		newMembershipId = "";
+	}
+	private async Task DeleteMember(Member member)
+	{
+		await MemberRepo.DeleteAsync(member.Id);
+		members.Remove(member);
+	}
+}

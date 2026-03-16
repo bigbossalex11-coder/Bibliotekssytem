@@ -1,0 +1,52 @@
+﻿@page "/loans"
+@using LibrarySystem.Core
+@using LibrarySystem.Data.Interfaces
+@inject IBookRepository BookRepo
+@inject IMemberRepository MemberRepo
+@inject ILoanRepository LoanRepo
+@rendermode InteractiveServer
+
+<h1>Lån</h1>
+<button @onclick="AddLoan">Lägg till</button>
+
+<select @bind="selectedBookId">
+	@foreach (var book in books)
+	{
+		<option value="@book.Id">@book.Title</option>
+	}
+</select>
+<select @bind="selectedMemberId">
+	@foreach (var member in members)
+	{
+		<option value="@member.Id">@member.Name</option>
+	}
+</select>
+	@foreach (var loan in loans)
+	{
+		<p>@loan.Book.Title - @loan.Member.Name</p>
+	}
+
+@code {
+	private List<Loan> loans = new();
+	private List<Book> books = new();
+	private List<Member> members = new();
+	private int selectedBookId = 0;
+	private int selectedMemberId = 0;
+
+	protected override async Task OnInitializedAsync()
+	{
+		books = await BookRepo.GetAllAsync();
+		members = await MemberRepo.GetAllAsync();
+		loans = await LoanRepo.GetAllAsync();
+	}
+
+	private async Task AddLoan()
+	{
+		var book = books.First(b => b.Id == selectedBookId);
+		var member = members.First(m => m.Id == selectedMemberId);
+		var newLoan = new Loan(book, member);
+		await LoanRepo.AddAsync(newLoan);
+		loans.Add(newLoan);
+	}
+}
+

@@ -1,0 +1,46 @@
+﻿@page "/books"
+@using LibrarySystem.Core
+@using LibrarySystem.Data.Interfaces
+@inject IBookRepository BookRepo
+@rendermode InteractiveServer
+
+<h1>Böcker</h1>
+<input @bind="newIsbn" placeholder="ISBN" />
+<input @bind="newTitle" placeholder="Titel" />
+<input @bind="newAuthor" placeholder="Författare" />
+<input @bind="newPublishedYear" placeholder="Utgivningsår" type="number" />
+<button @onclick="AddBook">Lägg till</button>
+
+@foreach (var book in books)
+{
+	<p>@book.Title - @book.Author <button @onclick="() => DeleteBook(book)">Ta bort</button></p>
+}
+
+@code {
+	private List<Book> books = new();
+
+	protected override async Task OnInitializedAsync()
+	{
+		books = await BookRepo.GetAllAsync();
+	}
+
+	private string newTitle = "";
+	private string newAuthor = "";
+	private string newIsbn = "";
+	private int newPublishedYear = 0;
+	private async Task AddBook()
+	{
+		var newBook = new Book(newIsbn, newTitle, newAuthor,newPublishedYear);
+		await BookRepo.AddAsync(newBook);
+		books.Add(newBook);
+		newTitle = "";
+		newAuthor = "";
+		newIsbn = "";
+		newPublishedYear = 0;
+	}
+	private async Task DeleteBook(Book book)
+	{
+		await BookRepo.DeleteAsync(book.Id);
+		books.Remove(book);
+	}
+}

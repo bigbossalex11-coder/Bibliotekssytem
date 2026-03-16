@@ -13,10 +13,8 @@ namespace LibrarySystem.Core
 
         public ICollection<Loan> Loans { get; set; } = new List<Loan>();
 
-        private Book()
-        {
-
-        }
+        private Book() { }
+        
 
         public Book(string iSBN, string title, string author, int publishedYear, bool isAvailable = true)
         {
