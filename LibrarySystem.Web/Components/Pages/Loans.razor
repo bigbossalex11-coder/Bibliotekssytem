@@ -23,7 +23,8 @@
 </select>
 	@foreach (var loan in loans)
 	{
-		<p>@loan.Book.Title - @loan.Member.Name</p>
+	<p>@loan.Book.Title - @loan.Member.Name</p>
+	<button @onclick="() => DeleteLoan(loan)">Ta bort</button>
 	}
 
 @code {
@@ -47,6 +48,11 @@
 		var newLoan = new Loan(book, member);
 		await LoanRepo.AddAsync(newLoan);
 		loans.Add(newLoan);
+	}
+	private async Task DeleteLoan(Loan loan)
+	{
+		await LoanRepo.DeleteAsync(loan.Id);
+		loans.Remove(loan);
 	}
 }
 

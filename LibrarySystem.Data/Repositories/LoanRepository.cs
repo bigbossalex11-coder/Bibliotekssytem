@@ -42,6 +42,15 @@ namespace LibrarySystem.Data.Repositories
             _context.Loans.Update(loan);
             await _context.SaveChangesAsync();
         }
+        public async Task DeleteAsync(int id)
+        {
+            var loan = await _context.Loans.FindAsync(id);
+            if (loan != null)
+            {
+                _context.Loans.Remove(loan);
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }
   

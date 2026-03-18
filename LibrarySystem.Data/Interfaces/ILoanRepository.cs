@@ -12,5 +12,6 @@ namespace LibrarySystem.Data.Interfaces
 
         Task AddAsync(Loan loan);
         Task UpdateAsync(Loan loan);
+        Task DeleteAsync(int id);   
     }
 }
