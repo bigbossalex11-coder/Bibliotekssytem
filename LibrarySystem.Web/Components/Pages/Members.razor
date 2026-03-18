@@ -4,10 +4,13 @@
 @inject IMemberRepository MemberRepo
 @rendermode InteractiveServer
 
-<h1>Medlemmar</h1>
-<input @bind="newName" placeholder="Namn" />
-<input @bind="newMembershipId" placeholder="Medlems ID" />
-<button @onclick="AddMember">Lägg till</button>
+<EditForm Model="newMember" OnValidSubmit="AddMember">
+	<DataAnnotationsValidator />
+	<ValidationSummary />
+	<InputText @bind-Value="newMember.Name" placeholder="Name" />
+	<InputText @bind-Value="newMember.MembershipID" placeholder="ID" />
+	<button type="submit">Lägg till</button>
+</EditForm>
 
 @foreach (var member in members)
 {
@@ -23,17 +26,13 @@
 		members = await MemberRepo.GetAllAsync();
 	}
 
-	private string newName = "";
-	private string newMembershipId = "";
+	private Member newMember = new Member("", "", true);
 
 	private async Task AddMember()
 	{
-		var newMember = new Member(newName, newMembershipId);
 		await MemberRepo.AddAsync(newMember);
 		members.Add(newMember);
-
-		newName = "";
-		newMembershipId = "";
+		newMember = new Member("", "", true);
 	}
 	private async Task DeleteMember(Member member)
 	{

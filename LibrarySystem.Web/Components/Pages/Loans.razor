@@ -9,6 +9,10 @@
 <h1>Lån</h1>
 <button @onclick="AddLoan">Lägg till</button>
 
+@if (errorMessage != "")
+{
+	<p style="color:red">@errorMessage</p>
+}
 <select @bind="selectedBookId">
 	@foreach (var book in books)
 	{
@@ -33,6 +37,7 @@
 	private List<Member> members = new();
 	private int selectedBookId = 0;
 	private int selectedMemberId = 0;
+	private string errorMessage = "";
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -43,15 +48,23 @@
 
 	private async Task AddLoan()
 	{
+		if (selectedBookId == 0 || selectedMemberId == 0)
+		{
+			errorMessage = "Välj en bok och en medlem.";
+			return;
+		}
+		errorMessage = "";
 		var book = books.First(b => b.Id == selectedBookId);
 		var member = members.First(m => m.Id == selectedMemberId);
 		var newLoan = new Loan(book, member);
 		await LoanRepo.AddAsync(newLoan);
 		loans.Add(newLoan);
+
+		
 	}
 	private async Task DeleteLoan(Loan loan)
 	{
-		await LoanRepo.DeleteAsync(loan.Id);
+		await LoanRepo.DeleteAsync(loan.Id); 
 		loans.Remove(loan);
 	}
 }

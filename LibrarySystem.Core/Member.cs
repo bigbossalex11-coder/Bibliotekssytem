@@ -1,10 +1,14 @@
 ﻿
+using System.ComponentModel.DataAnnotations;
+
 namespace LibrarySystem.Core
 {
         public class Member
         {
             public int Id {  get; set; }
+            [Required]
             public string Name { get; set; }
+            [Required]
             public string MembershipID { get; set; }
             public bool CanBorrow { get; set; }
             public List<Book> BorrowedBooks { get; set; }

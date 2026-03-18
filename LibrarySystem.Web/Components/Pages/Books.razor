@@ -4,13 +4,16 @@
 @inject IBookRepository BookRepo
 @rendermode InteractiveServer
 
-<h1>Böcker</h1>
-<input @bind="newIsbn" placeholder="ISBN" />
-<input @bind="newTitle" placeholder="Titel" />
-<input @bind="newAuthor" placeholder="Författare" />
-<input @bind="newPublishedYear" placeholder="Utgivningsår" type="number" />
-<button @onclick="AddBook">Lägg till</button>
+<EditForm Model="newBook" OnValidSubmit="AddBook">
+	<DataAnnotationsValidator />
+	<ValidationSummary />
 
+	<InputText @bind-Value="newBook.ISBN" placeholder="ISBN" />
+	<InputText @bind-Value="newBook.Title" placeholder="Titel" />
+	<InputText @bind-Value="newBook.Author" placeholder="Författare" />
+	<InputNumber @bind-Value="newBook.PublishedYear" placeholder="Utgivningsår" />
+	<button type="submit">Lägg till</button>
+</EditForm>
 @foreach (var book in books)
 {
 	<p>@book.Title - @book.Author <button @onclick="() => DeleteBook(book)">Ta bort</button></p>
@@ -24,19 +27,13 @@
 		books = await BookRepo.GetAllAsync();
 	}
 
-	private string newTitle = "";
-	private string newAuthor = "";
-	private string newIsbn = "";
-	private int newPublishedYear = 0;
+	private Book newBook = new Book("", "", "", 0);
+
 	private async Task AddBook()
 	{
-		var newBook = new Book(newIsbn, newTitle, newAuthor,newPublishedYear);
 		await BookRepo.AddAsync(newBook);
 		books.Add(newBook);
-		newTitle = "";
-		newAuthor = "";
-		newIsbn = "";
-		newPublishedYear = 0;
+		newBook = new Book("", "", "", 0);
 	}
 	private async Task DeleteBook(Book book)
 	{
