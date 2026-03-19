@@ -1,13 +1,30 @@
 ﻿@page "/"
 
-<PageTitle>Bibliotekssystem</PageTitle>
+  <PageTitle>Bibliotekssystem</PageTitle>
 
-<h1>Välkommen till Bibliotekssystemet</h1>
+  <h1 class="mb-4">Välkommen till Bibliotekssystemet</h1>
+  <p class="lead">Hantera böcker, medlemmar och lån.</p>
 
-<p>Hantera böcker, medlemmar och lån.</p>
-
-<ul>
-    <li><a href="books">Böcker</a></li>
-    <li><a href="members">Medlemmar</a></li>
-    <li><a href="loans">Lån</a></li>
-</ul>
+  <div class="row mt-4">
+      <div class="col-md-4">
+          <div class="card text-center p-3">
+              <h3>📚 Böcker</h3>
+              <p>Hantera bokkatalogen</p>
+              <a href="books" class="btn btn-primary">Gå till böcker</a>
+          </div>
+      </div>
+      <div class="col-md-4">
+          <div class="card text-center p-3">
+              <h3>👤 Medlemmar</h3>
+              <p>Hantera medlemsregistret</p>
+              <a href="members" class="btn btn-primary">Gå till medlemmar</a>
+          </div>
+      </div>
+      <div class="col-md-4">
+          <div class="card text-center p-3">
+              <h3>📖 Lån</h3>
+              <p>Hantera utlåning</p>
+              <a href="loans" class="btn btn-primary">Gå till lån</a>
+          </div>
+      </div>
+  </div>

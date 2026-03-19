@@ -3,69 +3,97 @@
 @using LibrarySystem.Data.Interfaces
 @inject IBookRepository BookRepo
 @inject IMemberRepository MemberRepo
-@inject ILoanRepository LoanRepo
+@inject ILoanService LoanService
 @rendermode InteractiveServer
 
 <h1>Lån</h1>
-<button @onclick="AddLoan">Lägg till</button>
+
+<div class="mb-2">
+    <select class="form-select" @bind="selectedBookId">
+        <option value="0">-- Välj bok --</option>
+        @foreach (var book in books)
+        {
+            <option value="@book.Id">@book.Title</option>
+        }
+    </select>
+</div>
+<div class="mb-2">
+    <select class="form-select" @bind="selectedMemberId">
+        <option value="0">-- Välj medlem --</option>
+        @foreach (var member in members)
+        {
+            <option value="@member.Id">@member.Name</option>
+        }
+    </select>
+</div>
+<button class="btn btn-primary" @onclick="AddLoan">Lägg till</button>
 
 @if (errorMessage != "")
 {
-	<p style="color:red">@errorMessage</p>
+    <p class="text-danger mt-2">@errorMessage</p>
 }
-<select @bind="selectedBookId">
-	@foreach (var book in books)
-	{
-		<option value="@book.Id">@book.Title</option>
-	}
-</select>
-<select @bind="selectedMemberId">
-	@foreach (var member in members)
-	{
-		<option value="@member.Id">@member.Name</option>
-	}
-</select>
-	@foreach (var loan in loans)
-	{
-	<p>@loan.Book.Title - @loan.Member.Name</p>
-	<button @onclick="() => DeleteLoan(loan)">Ta bort</button>
-	}
+
+<table class="table mt-4">
+    <thead>
+        <tr>
+            <th>Bok</th>
+            <th>Medlem</th>
+            <th>Lånedatum</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var loan in loans.Where(l => !l.IsReturned))
+        {
+            <tr>
+                <td>@loan.Book.Title</td>
+                <td>@loan.Member.Name</td>
+                <td>@loan.LoanDate.ToShortDateString()</td>
+                <td>
+                    <button class="btn btn-success btn-sm" @onclick="() => ReturnLoan(loan)">Återlämna</button>
+                    <button class="btn btn-danger btn-sm" @onclick="() => DeleteLoan(loan)">Ta bort</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 
 @code {
-	private List<Loan> loans = new();
-	private List<Book> books = new();
-	private List<Member> members = new();
-	private int selectedBookId = 0;
-	private int selectedMemberId = 0;
-	private string errorMessage = "";
+    private List<Loan> loans = new();
+    private List<Book> books = new();
+    private List<Member> members = new();
+    private int selectedBookId = 0;
+    private int selectedMemberId = 0;
+    private string errorMessage = "";
 
-	protected override async Task OnInitializedAsync()
-	{
-		books = await BookRepo.GetAllAsync();
-		members = await MemberRepo.GetAllAsync();
-		loans = await LoanRepo.GetAllAsync();
-	}
+    protected override async Task OnInitializedAsync()
+    {
+        books = await BookRepo.GetAllAsync();
+        members = await MemberRepo.GetAllAsync();
+        loans = await LoanService.GetActiveLoansAsync();
+    }
 
-	private async Task AddLoan()
-	{
-		if (selectedBookId == 0 || selectedMemberId == 0)
-		{
-			errorMessage = "Välj en bok och en medlem.";
-			return;
-		}
-		errorMessage = "";
-		var book = books.First(b => b.Id == selectedBookId);
-		var member = members.First(m => m.Id == selectedMemberId);
-		var newLoan = new Loan(book, member);
-		await LoanRepo.AddAsync(newLoan);
-		loans.Add(newLoan);
+    private async Task AddLoan()
+    {
+        if (selectedBookId == 0 || selectedMemberId == 0)
+        {
+            errorMessage = "Välj en bok och en medlem.";
+            return;
+        }
+        errorMessage = await LoanService.AddLoanAsync(selectedBookId, selectedMemberId) ?? "";
+        if (errorMessage == "")
+            loans = await LoanService.GetActiveLoansAsync();
+    }
 
-		
-	}
-	private async Task DeleteLoan(Loan loan)
-	{
-		await LoanRepo.DeleteAsync(loan.Id); 
-		loans.Remove(loan);
-	}
+    private async Task ReturnLoan(Loan loan)
+    {
+        await LoanService.ReturnLoanAsync(loan);
+        loans = await LoanService.GetActiveLoansAsync();
+    }
+    private async Task DeleteLoan(Loan loan)
+    {
+        await LoanService.DeleteLoanAsync(loan.Id);
+        loans = await LoanService.GetActiveLoansAsync();
+    }
 }
 

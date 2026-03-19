@@ -2,6 +2,7 @@ using LibrarySystem.Core;
 using LibrarySystem.Data;
 using LibrarySystem.Data.Interfaces;
 using LibrarySystem.Data.Repositories;
+using LibrarySystem.Data.Services;
 using LibrarySystem.Web.Components;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,13 +10,14 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 builder.Services.AddDbContext<LibraryContext>(options =>
-      options.UseSqlite("Data Source=library.db"));
+options.UseSqlite("Data Source=library.db"));
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 builder.Services.AddScoped<ILoanRepository, LoanRepository>();
+builder.Services.AddScoped<ILoanService, LoanService>();
+builder.Services.AddScoped<IMemberService, MemberService>();
 
 var app = builder.Build();
 

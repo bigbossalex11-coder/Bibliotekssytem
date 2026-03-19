@@ -1,42 +1,72 @@
-﻿@page "/members"
-@using LibrarySystem.Core
-@using LibrarySystem.Data.Interfaces
-@inject IMemberRepository MemberRepo
-@rendermode InteractiveServer
+﻿  @page "/members"
+  @using LibrarySystem.Core
+  @using LibrarySystem.Data.Interfaces
+  @inject IMemberService MemberService
+  @rendermode InteractiveServer
 
-<EditForm Model="newMember" OnValidSubmit="AddMember">
-	<DataAnnotationsValidator />
-	<ValidationSummary />
-	<InputText @bind-Value="newMember.Name" placeholder="Name" />
-	<InputText @bind-Value="newMember.MembershipID" placeholder="ID" />
-	<button type="submit">Lägg till</button>
-</EditForm>
+  <h1>Medlemmar</h1>
 
-@foreach (var member in members)
-{
-	<p>@member.Name - @member.MembershipID <button @onclick="() => DeleteMember(member)">Ta bort</button></p>
-}
+  <EditForm Model="newMember" OnValidSubmit="AddMember">
+      <DataAnnotationsValidator />
+      <ValidationSummary />
+      <div class="mb-2">
+          <InputText class="form-control" @bind-Value="newMember.Name" placeholder="Namn" />
+      </div>
+      <div class="mb-2">
+          <InputText class="form-control" @bind-Value="newMember.MembershipID" placeholder="Medlems-ID" />
+      </div>
+      <button class="btn btn-primary" type="submit">Lägg till</button>
+    @if (errorMessage != "")
+    {
+        <p class="text-danger mt-2">@errorMessage</p>
+    }
+  </EditForm>
 
+  <table class="table mt-4">
+      <thead>
+          <tr>
+              <th>Namn</th>
+              <th>Medlems-ID</th>
+              <th></th>
+          </tr>
+      </thead>
+      <tbody>
+          @foreach (var member in members)
+          {
+              <tr>
+                  <td>@member.Name</td>
+                  <td>@member.MembershipID</td>
+                  <td>
+                      <button class="btn btn-danger btn-sm" @onclick="() => DeleteMember(member)">Ta bort</button>
+                  </td>
+              </tr>
+          }
+      </tbody>
+  </table>
 
 @code {
 	private List<Member> members = new();
+    private string errorMessage = "";
 
 	protected override async Task OnInitializedAsync()
 	{
-		members = await MemberRepo.GetAllAsync();
+		members = await MemberService.GetActiveMemberAsync();
 	}
 
 	private Member newMember = new Member("", "", true);
 
-	private async Task AddMember()
-	{
-		await MemberRepo.AddAsync(newMember);
-		members.Add(newMember);
-		newMember = new Member("", "", true);
-	}
-	private async Task DeleteMember(Member member)
-	{
-		await MemberRepo.DeleteAsync(member.Id);
-		members.Remove(member);
-	}
+    private async Task AddMember()
+    {
+        errorMessage = await MemberService.AddMemberAsync(newMember.Name, newMember.MembershipID) ?? "";
+        if (errorMessage == "")
+        {
+            members = await MemberService.GetActiveMemberAsync();
+            newMember = new Member("", "", true);
+        }
+    }
+    private async Task DeleteMember(Member member)
+    {
+        await MemberService.DeleteMemberAsync(member.Id);
+        members = await MemberService.GetActiveMemberAsync();
+    }
 }

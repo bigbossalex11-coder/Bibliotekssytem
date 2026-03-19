@@ -4,20 +4,47 @@
 @inject IBookRepository BookRepo
 @rendermode InteractiveServer
 
-<EditForm Model="newBook" OnValidSubmit="AddBook">
-	<DataAnnotationsValidator />
-	<ValidationSummary />
+<h1>Böcker</h1>
 
-	<InputText @bind-Value="newBook.ISBN" placeholder="ISBN" />
-	<InputText @bind-Value="newBook.Title" placeholder="Titel" />
-	<InputText @bind-Value="newBook.Author" placeholder="Författare" />
-	<InputNumber @bind-Value="newBook.PublishedYear" placeholder="Utgivningsår" />
-	<button type="submit">Lägg till</button>
+<EditForm Model="newBook" OnValidSubmit="AddBook">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="mb-2">
+        <InputText class="form-control" @bind-Value="newBook.ISBN" placeholder="ISBN" />
+    </div>
+    <div class="mb-2">
+        <InputText class="form-control" @bind-Value="newBook.Title" placeholder="Titel" />
+    </div>
+    <div class="mb-2">
+        <InputText class="form-control" @bind-Value="newBook.Author" placeholder="Författare" />
+    </div>
+    <div class="mb-2">
+        <InputNumber class="form-control" @bind-Value="newBook.PublishedYear" placeholder="Utgivningsår" />
+    </div>
+    <button class="btn btn-primary" type="submit">Lägg till</button>
 </EditForm>
-@foreach (var book in books)
-{
-	<p>@book.Title - @book.Author <button @onclick="() => DeleteBook(book)">Ta bort</button></p>
-}
+
+<table class="table mt-4">
+    <thead>
+        <tr>
+            <th>Titel</th>
+            <th>Författare</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in books)
+        {
+            <tr>
+                <td>@book.Title</td>
+                <td>@book.Author</td>
+                <td>
+                    <button class="btn btn-danger btn-sm" @onclick="() => DeleteBook(book)">Ta bort</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 
 @code {
 	private List<Book> books = new();
