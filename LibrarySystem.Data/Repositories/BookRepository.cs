@@ -23,7 +23,7 @@ namespace LibrarySystem.Data.Repositories
         }
         public async Task<List<Book>> SearchAsync(string searchTerm)
         {
-            return await _context.Books.Where(b => b.Title.Contains(searchTerm)).ToListAsync();
+            return await _context.Books.Where(b => b.Title.ToLower().Contains(searchTerm.ToLower())).ToListAsync();
         }
 
         public async Task AddAsync(Book book)

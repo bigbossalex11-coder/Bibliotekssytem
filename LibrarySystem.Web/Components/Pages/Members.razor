@@ -31,6 +31,10 @@
           </tr>
       </thead>
       <tbody>
+        @if (!members.Any())
+        {
+            <tr><td colspan="3" class="text-muted">Inga medlemmar tillagda ännu.</td></tr>
+        }
           @foreach (var member in members)
           {
               <tr>

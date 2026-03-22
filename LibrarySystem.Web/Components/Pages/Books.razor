@@ -38,6 +38,10 @@
         </tr>
     </thead>
     <tbody>
+        @if (!books.Any())
+        {
+            <tr><td colspan="3" class="text-muted">Inga Böcker tillagda ännu.</td></tr>
+        }
         @foreach (var book in books)
         {
             <tr>
