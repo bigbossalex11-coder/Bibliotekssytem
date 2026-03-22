@@ -1,0 +1,106 @@
+﻿@page "/books/{Id:int}"
+@using LibrarySystem.Core
+@using LibrarySystem.Data.Interfaces
+@inject IBookRepository BookRepo
+@inject ILoanService LoanService
+@inject IMemberService MemberService
+@rendermode InteractiveServer
+
+<h1>Bokdetaljer</h1>
+
+@if (book == null)
+{
+    <p>Laddar...</p>
+}
+else
+{
+    <div class="card p-3 mb-4">
+        <p><strong>Titel:</strong> @book.Title</p>
+        <p><strong>Författare:</strong> @book.Author</p>
+        <p><strong>År:</strong> @book.PublishedYear</p>
+        <p><strong>ISBN:</strong> @book.ISBN</p>
+        <p><strong>Status:</strong> @(book.IsAvailable ? "Tillgänglig" : "Utlånad")</p>
+    </div>
+
+    @if (book.IsAvailable)
+    {
+        <h4>Låna boken</h4>
+        <select class="form-select mb-2" style="max-width:300px" @bind="selectedMemberId">
+            <option value="0">-- Välj medlem --</option>
+            @foreach (var member in members)
+            {
+                <option value="@member.Id">@member.Name</option>
+            }
+        </select>
+        <button class="btn btn-primary mb-3" @onclick="BorrowBook">Låna</button>
+        @if (errorMessage != "")
+        {
+            <p class="text-danger">@errorMessage</p>
+        }
+    }
+
+    <h4>Lånehistorik</h4>
+    @if (!loans.Any())
+    {
+        <p>Inga lån registrerade.</p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Medlem</th>
+                    <th>Lånedatum</th>
+                    <th>Förfallodatum</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var loan in loans)
+                {
+                    <tr>
+                        <td>@loan.Member.Name</td>
+                        <td>@loan.LoanDate.ToShortDateString()</td>
+                        <td>@loan.DueDate.ToShortDateString()</td>
+                        <td>@(loan.IsReturned ? "Återlämnad" : "Aktiv")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Book? book = null;
+    private List<Member> members = new();
+    private List<Loan> loans = new();
+    private int selectedMemberId = 0;
+    private string errorMessage = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        book = await BookRepo.GetByIdAsync(Id);
+        members = await MemberService.GetActiveMemberAsync();
+        loans = await LoanService.GetLoansByBookIdAsync(Id);
+    }
+    public async Task BorrowBook()
+    {
+        if (selectedMemberId == 0)
+        {
+            errorMessage = "välj en medlem";
+            return;
+        }
+        errorMessage = await LoanService.AddLoanAsync(Id, selectedMemberId) ?? "";
+        if(errorMessage == "")
+        {
+            book = await BookRepo.GetByIdAsync(Id);
+            loans = await LoanService.GetLoansByBookIdAsync(Id);
+        }
+    }
+
+}

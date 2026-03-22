@@ -37,6 +37,7 @@
                 <td>@book.Author</td>
                 <td>
                     <button class="btn btn-danger btn-sm" @onclick="() => DeleteBook(book)">Ta bort</button>
+                    <a href="/books/@book.Id" class="btn btn-info btn-sm">Detaljer</a>
                 </td>
             </tr>
         }

@@ -45,6 +45,11 @@ namespace LibrarySystem.Data.Services
             await _bookRepo.UpdateAsync(book);
             return null;
         }
+        public async Task<List<Loan>> GetLoansByBookIdAsync(int bookId) 
+        {
+            var allLoans = await _loanRepo.GetAllAsync();
+            return allLoans.Where(l => l.BookId == bookId).ToList();
+        }
         public async Task ReturnLoanAsync(Loan loan)
         {
             loan.ReturnBook();
