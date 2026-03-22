@@ -1,6 +1,7 @@
 ﻿using LibrarySystem.Core;
 using LibrarySystem.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace LibrarySystem.Data.Repositories
 {
@@ -28,23 +29,44 @@ namespace LibrarySystem.Data.Repositories
 
         public async Task AddAsync(Member member)
         {
-            _context.Members.Add(member);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Members.Add(member);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+               throw new Exception("Kunde inte lägga till medlem", ex); 
+            }
         }
 
         public async Task UpdateAsync(Member member)
         {
-            _context.Members.Update(member);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Members.Update(member);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Kunde inte uppdatera medlem", ex);
+            }
         }
 
         public async Task DeleteAsync(int id)
         {
-            var member = await _context.Members.FindAsync(id);
-            if (member != null)
+            try
             {
-                _context.Members.Remove(member);
-                await _context.SaveChangesAsync();
+                var member = await _context.Members.FindAsync(id);
+                if (member != null)
+                {
+                    _context.Members.Remove(member);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Kunde inte ta bort medlem", ex);
             }
         }
 

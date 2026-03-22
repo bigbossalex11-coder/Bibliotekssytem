@@ -33,22 +33,44 @@ namespace LibrarySystem.Data.Repositories
         }
         public async Task AddAsync(Loan loan)
         {
-            _context.Loans.Add(loan);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Loans.Add(loan);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Kunde inte lägga till lån", ex);
+            }
         }
-
+          
         public async Task UpdateAsync(Loan loan)
         {
-            _context.Loans.Update(loan);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Loans.Update(loan);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Kunde inte uppdatera befintligt lån", ex);
+            }
+               
         }
         public async Task DeleteAsync(int id)
         {
-            var loan = await _context.Loans.FindAsync(id);
-            if (loan != null)
+            try
             {
-                _context.Loans.Remove(loan);
-                await _context.SaveChangesAsync();
+                var loan = await _context.Loans.FindAsync(id);
+                if (loan != null)
+                {
+                    _context.Loans.Remove(loan);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex) 
+            {
+                throw new Exception("Kunde inte ta bort befintligt lån", ex);
             }
         }
     }

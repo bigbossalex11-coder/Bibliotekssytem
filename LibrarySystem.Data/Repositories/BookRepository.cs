@@ -28,23 +28,43 @@ namespace LibrarySystem.Data.Repositories
 
         public async Task AddAsync(Book book)
         {
-            _context.Books.Add(book);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Books.Add(book);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("kunde inte lägga till en bok", ex);
+            }
         }
-
         public async Task UpdateAsync(Book book)
         {
-            _context.Books.Update(book);
-            await _context.SaveChangesAsync();
-        }
+            try
+            {
+                _context.Books.Update(book);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Kunde inte uppdatera boken", ex);
+            }
+        }    
 
         public async Task DeleteAsync(int id)
         {
-            var book = await _context.Books.FindAsync(id);
-            if(book != null)
+            try
             {
-                _context.Books.Remove(book);
-                await _context.SaveChangesAsync();
+                var book = await _context.Books.FindAsync(id);
+                if (book != null)
+                {
+                    _context.Books.Remove(book);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Kunde inte ta bort bok", ex);
             }
         }
 
