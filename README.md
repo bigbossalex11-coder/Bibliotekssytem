@@ -1,65 +1,75 @@
-# Bibliotekssystem
+ # Bibliotekssystem 2.0
 
-Ett bibliotekssystem byggt med C# och .NET 8, utvecklat med TDD (Test-Driven Development).
+  Ett bibliotekssystem byggt med C# och .NET 10, utvecklat med TDD (Test-Driven Development).
+  Del 2 lägger till Entity Framework Core, SQLite-databas och ett Blazor-webbgränssnitt.
 
-## Funktioner
+  ## Köra projektet
 
-- Visa alla bocker med tillganglighetsstatus
-- Sok bocker via titel
-- Lana och returnera bocker
-- Visa medlemmar
-- Statistik (antal bocker, utlanade, medlemmar, lan)
-- Forseningsavgifter (10 kr per dag)
-- Maxgrans for lan (3 bocker per medlem)
-- Sortering av bocker (titel, ar)
+  ### Blazor-webbappen
+  ```bash
+  dotnet run --project LibrarySystem.Web
+  ```
+  Öppna sedan `https://localhost:5001` i webbläsaren.
 
-## Projektstruktur
+  ### Köra testerna
+  ```bash
+  dotnet test
+  ```
 
-### Klasser
+  ## Projektstruktur
 
-| Klass | Beskrivning |
-|-------|-------------|
-| `Book` | Representerar en bok med ISBN, titel, forfattare och tillganglighet |
-| `Member` | Representerar en biblioteksmedlem med lanerattiggheter |
-| `Loan` | Representerar ett lan med forfallodatum och forseningsavgift |
-| `BookCatalog` | Hanterar boksamlingen med sok- och sorteringsfunktionalitet |
-| `MemberRegistry` | Hanterar medlemsregistret med sokfunktionalitet |
-| `LoanManager` | Hanterar utlaning och retur med affarsregler |
-| `ISearchable<T>` | Generiskt interface for sokbara samlingar |
+  | Projekt | Beskrivning |
+  |---------|-------------|
+  | `LibrarySystem.Core` | Domänklasser: Book, Member, Loan |
+  | `LibrarySystem.Data` | DbContext, repositories, services |
+  | `LibrarySystem.Web` | Blazor-webbgränssnitt |
+  | `BiblioteksystemTests` | xUnit + bUnit tester |
 
-### Affarsregler
+  ## Databasmodell
 
-- Endast tillgangliga bocker kan lanas
-- Medlemmen maste ha lanerattiggheter (`CanBorrow`)
-- Max 3 bocker per medlem
-- Forseningsavgift: 10 kr per dag efter forfallodatum
-- Lanetid: 14 dagar
+  ### Tabeller
 
-## Kor programmet
+  | Tabell | Kolumner |
+  |--------|----------|
+  | Books | Id, ISBN, Title, Author, PublishedYear, IsAvailable |
+  | Members | Id, Name, MembershipID, CanBorrow |
+  | Loans | Id, BookId, MemberId, LoanDate, DueDate, IsReturned |
 
-```bash
-dotnet run --project Bibliotekssytem
-```
+  ### Relationer
+  - En **Book** kan ha många **Loans**
+  - En **Member** kan ha många **Loans**
+  - Ett **Loan** tillhör en Book och en Member
 
-## Kor testerna
+  ## Blazor-sidor
 
-```bash
-dotnet test
-```
+  | Sida | URL | Beskrivning |
+  |------|-----|-------------|
+  | Hem | `/` | Startsida med navigering |
+  | Böcker | `/books` | Lista, sök, lägg till och ta bort böcker |
+  | Bokdetaljer | `/books/{id}` | Detaljinfo, lånehistorik och låna bok |
+  | Medlemmar | `/members` | Lista, lägg till och ta bort medlemmar |
+  | Lån | `/loans` | Hantera aktiva lån, returnera och ta bort |
 
-### Teststatistik
+  ## Tester
 
-- 35 enhetstester
-- Anvander xUnit med `[Fact]` och `[Theory]`
-- Foljer AAA-monster (Arrange, Act, Assert)
-- Tacker edge cases och felhantering
+  - 52 enhetstester som passerar
+  - Repository-tester med EF InMemory-databas
+  - Blazor-komponenttester med bUnit och Moq
 
-## Tekniker
+  ## Tekniker
 
-- C# / .NET 8
-- xUnit (testramverk)
-- TDD (Test-Driven Development)
-- LINQ (lambda-uttryck)
-- Generiskt interface (`ISearchable<T>`)
-- Komposition
-- Guard clauses och try-catch felhantering
+  - C# / .NET 10
+  - Entity Framework Core med SQLite
+  - Blazor Server
+  - xUnit, bUnit, Moq
+  - Bootstrap 5
+  - TDD (Test-Driven Development)
+  - Repository Pattern + Service Layer
+
+  ## Screenshots
+
+  ![Hem](screenshots/Home.png)
+  ![Böcker](screenshots/Books.png)
+  ![Bokdetaljer](screenshots/Bookdetails.png)
+  ![Medlemmar](screenshots/Members.png)
+  ![Lån](screenshots/Loans.png)
