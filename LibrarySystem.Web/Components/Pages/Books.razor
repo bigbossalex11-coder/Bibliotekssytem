@@ -6,6 +6,7 @@
 
 <h1>Böcker</h1>
 
+<h4>Lägg till bok</h4>
 <EditForm Model="newBook" OnValidSubmit="AddBook">
     <DataAnnotationsValidator />
     <ValidationSummary />
@@ -20,6 +21,12 @@
     </div>
     <button class="btn btn-primary" type="submit">Lägg till</button>
 </EditForm>
+
+
+<h4 class="mt-4">Sök bland böcker</h4>
+<input type="text" class="form-control mb-3 mt-3"
+       @oninput="SearchBooks"
+       placeholder="Sök titel..." />
 
 <table class="table mt-4">
     <thead>
@@ -45,7 +52,14 @@
 </table>
 
 @code {
-	private List<Book> books = new();
+    private List<Book> books = new();
+    private string searchTerm = "";
+    
+    private async Task SearchBooks(ChangeEventArgs e)
+    {
+        searchTerm = e.Value?.ToString() ?? "";
+        books = await BookRepo.SearchAsync(searchTerm);
+    }
 
 	protected override async Task OnInitializedAsync()
 	{
