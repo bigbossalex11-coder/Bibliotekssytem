@@ -9,16 +9,25 @@
 <h1>Lån</h1>
 
 <div class="mb-2">
-    <select class="form-select" @bind="selectedBookId">
-        <option value="0">-- Välj bok --</option>
-        @foreach (var book in books)
-        {
-            <option value="@book.Id">@book.Title</option>
-        }
-    </select>
+    <input type="text" class="form-control" value="@bookSearch" @oninput="SearchBooks" placeholder="Sök bok..." />
+    @if (filteredBooks.Any())
+    {
+        <ul class="list-group mt-1">
+            @foreach (var book in filteredBooks)
+            {
+                <li class="list-group-item list-group-item-action" style="cursor:pointer" @onclick="() => SelectBook(book)">
+            @book.Title — @book.Author
+        </li>
+                }
+        </ul>
+    }
+    @if (selectedBookId != 0)
+    {
+        <p class="mt-1 text-success">Vald bok: @books.First(b => b.Id == selectedBookId).Title</p>
+    }
 </div>
 <div class="mb-2">
-    <select class="form-select" @bind="selectedMemberId">
+     <select class="form-select" @bind="selectedMemberId">
         <option value="0">-- Välj medlem --</option>
         @foreach (var member in members)
         {
@@ -32,6 +41,8 @@
 {
     <p class="text-danger mt-2">@errorMessage</p>
 }
+<input type="text" class="form-control mb-3 mt-3" @bind-value="searchTerm" @bind-value:event="oninput"
+       placeholder="Sök bok eller medlem..." />
 
 <table class="table mt-4">
     <thead>
@@ -43,7 +54,9 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var loan in loans.Where(l => !l.IsReturned))
+        @foreach (var loan in loans.Where(l => !l.IsReturned &&
+                (l.Book.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                l.Member.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))))
         {
             <tr>
                 <td>@loan.Book.Title</td>
@@ -65,6 +78,9 @@
     private int selectedBookId = 0;
     private int selectedMemberId = 0;
     private string errorMessage = "";
+    private string searchTerm = "";
+    private string bookSearch = "";
+    private List<Book> filteredBooks = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -82,7 +98,11 @@
         }
         errorMessage = await LoanService.AddLoanAsync(selectedBookId, selectedMemberId) ?? "";
         if (errorMessage == "")
+        {
             loans = await LoanService.GetActiveLoansAsync();
+            selectedBookId = 0;
+            bookSearch = "";
+        }
     }
 
     private async Task ReturnLoan(Loan loan)
@@ -95,5 +115,17 @@
         await LoanService.DeleteLoanAsync(loan.Id);
         loans = await LoanService.GetActiveLoansAsync();
     }
+    private void SearchBooks(ChangeEventArgs e)
+    {
+        bookSearch = e.Value?.ToString() ?? "";
+        filteredBooks = books.Where(b => b.IsAvailable &&
+            b.Title.Contains(bookSearch, StringComparison.OrdinalIgnoreCase)).ToList();
+    }
+     private void SelectBook(Book book)
+  {
+      selectedBookId = book.Id;
+      bookSearch = book.Title;
+      filteredBooks = new();
+  }
 }
 

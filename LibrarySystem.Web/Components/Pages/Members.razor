@@ -53,15 +53,15 @@
 		members = await MemberService.GetActiveMemberAsync();
 	}
 
-	private Member newMember = new Member("", "", true);
+	private Member newMember = new Member("", true);
 
     private async Task AddMember()
     {
-        errorMessage = await MemberService.AddMemberAsync(newMember.Name, newMember.MembershipID) ?? "";
+        errorMessage = await MemberService.AddMemberAsync(newMember.Name) ?? "";
         if (errorMessage == "")
         {
             members = await MemberService.GetActiveMemberAsync();
-            newMember = new Member("", "", true);
+            newMember = new Member("", true);
         }
     }
     private async Task DeleteMember(Member member)

@@ -7,10 +7,13 @@ namespace LibrarySystem.Core
     {
         public int Id { get; set; }
         [Required]
+        [RegularExpression(@"^\d{13}$", ErrorMessage = "ISBN måste vara exakt 13 siffror")]
         public string ISBN { get; set; }
         [Required]
+        [StringLength(100, MinimumLength = 1, ErrorMessage = "Titel måste vara mellan 1 och 100 tecken")]
         public string Title { get; set; }
         [Required]
+        [RegularExpression(@"^[a-öA-Ö\s.\-]+$", ErrorMessage = "Författare får bara innehålla bokstäver")]
         public string Author { get; set; }
         public int PublishedYear { get; set; }
         public bool IsAvailable { get; set; }

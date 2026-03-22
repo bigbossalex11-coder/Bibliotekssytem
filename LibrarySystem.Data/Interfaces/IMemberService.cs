@@ -9,7 +9,7 @@ namespace LibrarySystem.Data.Interfaces
     public interface IMemberService
     {
         Task<List<Member>> GetActiveMemberAsync();
-        Task<string?> AddMemberAsync(string name, string membershipId);
+        Task<string?> AddMemberAsync(string name);
         Task DeleteMemberAsync(int id);
     }
 }

@@ -21,13 +21,9 @@ namespace LibrarySystem.Data.Services
         }
   
 
-        public async Task<string?> AddMemberAsync(string name, string membershipId)
+        public async Task<string?> AddMemberAsync(string name)
         {
-            var existing = await _memberRepo.GetAllAsync();
-            if (existing.Any(m => m.MembershipID == membershipId))
-                return "Medlems-ID används redan.";
-
-            var member = new Member(name, membershipId);
+            var member = new Member(name);
             await _memberRepo.AddAsync(member);
             return null;
         }

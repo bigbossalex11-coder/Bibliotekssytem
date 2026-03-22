@@ -17,13 +17,20 @@ namespace LibrarySystem.Core
 
         }
 
-            public Member(string name, string membershipID, bool canBorrow = true)
+            public Member(string name, bool canBorrow = true)
             {
                 Name = name;
-                MembershipID = membershipID;
+                MembershipID = "M-" + Guid.NewGuid().ToString()[..8];
                 CanBorrow = canBorrow;
                 BorrowedBooks = new List<Book>();
             }
+            public Member(string name, string membershipID, bool canBorrow = true)
+        {
+            Name = name;
+            MembershipID = membershipID;
+            CanBorrow = canBorrow;
+            BorrowedBooks = new List<Book>();
+        }
             public void BorrowBook(Book book)
             {
                 BorrowedBooks.Add(book);
